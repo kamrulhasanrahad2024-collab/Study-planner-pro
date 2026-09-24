@@ -1,0 +1,2810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#6376df">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Study Planner">
+<link rel="manifest" href="manifest.json">
+<title>Study Planner Pro</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+margin:0;
+padding:15px;
+background:#f4f6fb;
+color:#172033;
+font-family:Arial,Helvetica,sans-serif;
+transition:.25s
+}
+
+body.dark{
+background:#101522;
+color:#f3f5f8
+}
+
+.app{
+max-width:1000px;
+margin:auto
+}
+
+.card{
+background:#fff;
+border-radius:22px;
+padding:20px;
+margin-bottom:16px;
+box-shadow:0 6px 20px rgba(0,0,0,.07)
+}
+
+.dark .card{
+background:#192131
+}
+
+h1,h2,h3{
+margin-top:0
+}
+
+.header{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px
+}
+
+.logo{
+font-size:28px;
+font-weight:bold
+}
+
+.small{
+color:#7d8492;
+font-size:14px
+}
+
+.dark .small{
+color:#aeb6c5
+}
+
+button{
+border:0;
+border-radius:12px;
+padding:12px 15px;
+font-size:15px;
+cursor:pointer
+}
+
+.primary{
+background:#6376df;
+color:white
+}
+
+.secondary{
+background:#edf0f7;
+color:#172033
+}
+
+.dark .secondary{
+background:#293449;
+color:#fff
+}
+
+.danger{
+background:#ffe8ec;
+color:#d43e58
+}
+
+input,select{
+width:100%;
+padding:13px;
+border:1px solid #dfe3eb;
+border-radius:11px;
+font-size:15px;
+background:#fff;
+color:#172033
+}
+
+.dark input,
+.dark select{
+background:#202b3d;
+color:#fff;
+border-color:#354258
+}
+
+.grid2{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px
+}
+
+.grid3{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px
+}
+
+.actions{
+display:flex;
+gap:8px;
+flex-wrap:wrap
+}
+
+.tabs{
+display:flex;
+gap:8px;
+overflow:auto;
+margin-bottom:15px
+}
+
+.tab{
+white-space:nowrap
+}
+
+.tab.active{
+background:#6376df;
+color:#fff
+}
+
+/* STATISTICS */
+
+.statGrid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px
+}
+
+.stat{
+background:#f5f6fa;
+border-radius:17px;
+padding:17px;
+text-align:center
+}
+
+.dark .stat{
+background:#202b3d
+}
+
+.statIcon{
+font-size:24px
+}
+
+.num{
+font-size:28px;
+font-weight:bold;
+color:#6376df;
+margin-top:5px
+}
+
+.label{
+font-size:13px;
+color:#7d8492;
+margin-top:5px
+}
+
+.progress{
+height:12px;
+background:#e6e9ef;
+border-radius:20px;
+overflow:hidden
+}
+
+.dark .progress{
+background:#303a4c
+}
+
+.fill{
+height:100%;
+width:0;
+background:#6376df;
+transition:.3s
+}
+
+.bigProgress{
+height:18px
+}
+
+.statRow{
+margin-bottom:15px
+}
+
+.statRowTop{
+display:flex;
+justify-content:space-between;
+margin-bottom:7px;
+font-size:14px
+}
+
+/* TASKS */
+
+.task{
+display:flex;
+align-items:center;
+gap:12px;
+padding:14px;
+border:1px solid #e1e5ec;
+border-radius:15px;
+margin-bottom:9px
+}
+
+.dark .task{
+border-color:#344054
+}
+
+.check{
+width:22px;
+height:22px
+}
+
+.taskInfo{
+flex:1
+}
+
+.taskName{
+font-weight:bold;
+font-size:16px
+}
+
+.taskMeta{
+font-size:12px;
+color:#7d8492;
+margin-top:5px
+}
+
+.completed .taskName{
+text-decoration:line-through;
+color:#999
+}
+
+.badge{
+display:inline-block;
+padding:5px 9px;
+border-radius:20px;
+font-size:11px;
+font-weight:bold;
+margin-top:5px
+}
+
+.high{
+background:#ffe5e9;
+color:#d63c56
+}
+
+.normal{
+background:#fff0cf;
+color:#a56c00
+}
+
+.low{
+background:#dff7e7;
+color:#16814b
+}
+
+.empty{
+text-align:center;
+padding:30px;
+color:#8a919e
+}
+
+/* CALENDAR */
+
+.dateNav{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px
+}
+
+.dateTitle{
+text-align:center;
+font-size:20px;
+font-weight:bold
+}
+
+.days{
+display:grid;
+grid-template-columns:repeat(7,1fr);
+gap:5px;
+margin-top:15px
+}
+
+.day{
+text-align:center;
+padding:10px 2px;
+border-radius:14px;
+cursor:pointer
+}
+
+.day.active{
+background:#6376df;
+color:#fff
+}
+
+.day small{
+display:block;
+font-size:11px;
+margin-bottom:5px
+}
+
+/* SEARCH */
+
+.searchRow{
+display:grid;
+grid-template-columns:2fr 1fr 1fr;
+gap:10px
+}
+
+/* GOALS */
+
+.goal{
+padding:14px;
+background:#f5f6fa;
+border-radius:15px;
+margin-bottom:10px
+}
+
+.dark .goal{
+background:#202b3d
+}
+
+.goalTop{
+display:flex;
+justify-content:space-between
+}
+
+/* TIMER */
+
+.timer{
+text-align:center
+}
+
+.timerDisplay{
+font-size:58px;
+font-weight:bold;
+color:#6376df;
+margin:15px
+}
+
+/* MODAL */
+
+.modal{
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.55);
+display:none;
+align-items:center;
+justify-content:center;
+padding:15px;
+z-index:10
+}
+
+.modalBox{
+background:#fff;
+border-radius:22px;
+padding:22px;
+width:100%;
+max-width:500px
+}
+
+.dark .modalBox{
+background:#192131
+}
+
+/* TOAST */
+
+.toast{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:#172033;
+color:#fff;
+padding:12px 18px;
+border-radius:12px;
+display:none;
+z-index:20
+}
+
+@media(max-width:700px){
+
+body{
+padding:10px
+}
+
+.card{
+padding:17px
+}
+
+.grid2,
+.grid3,
+.searchRow{
+grid-template-columns:1fr
+}
+
+.statGrid{
+grid-template-columns:repeat(2,1fr)
+}
+
+.logo{
+font-size:23px
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- HEADER -->
+
+<div class="card">
+
+<div class="header">
+
+<div>
+<div class="logo">📚 Study Planner Pro</div>
+<div class="small">Plan • Study • Track • Improve</div>
+</div>
+
+<button id="themeBtn">🌙</button>
+
+</div>
+
+</div>
+
+
+<!-- NAVIGATION -->
+
+<div class="tabs">
+
+<button class="tab active" data-view="dashboard">
+📊 Dashboard
+</button>
+
+<button class="tab" data-view="today">
+📝 Tasks
+</button>
+
+<button class="tab" data-view="week">
+📅 Week
+</button>
+
+<button class="tab" data-view="goals">
+🎯 Goals
+</button>
+
+<button class="tab" data-view="timer">
+⏱️ Timer
+</button>
+
+</div>
+
+
+<!-- ==================================================
+DASHBOARD
+================================================== -->
+
+<div id="dashboardView">
+
+<div class="card">
+
+<h2>📊 Study Dashboard</h2>
+
+<div class="small">
+Your complete study statistics
+</div>
+
+<br>
+
+<div class="statGrid">
+
+<div class="stat">
+<div class="statIcon">📚</div>
+<div id="allTotal" class="num">0</div>
+<div class="label">Total Tasks</div>
+</div>
+
+<div class="stat">
+<div class="statIcon">✅</div>
+<div id="allDone" class="num">0</div>
+<div class="label">Completed</div>
+</div>
+
+<div class="stat">
+<div class="statIcon">⏳</div>
+<div id="allRemaining" class="num">0</div>
+<div class="label">Remaining</div>
+</div>
+
+<div class="stat">
+<div class="statIcon">📈</div>
+<div id="allPercent" class="num">0%</div>
+<div class="label">Progress</div>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- OVERALL PROGRESS -->
+
+<div class="card">
+
+<div class="header">
+
+<h2>📈 Overall Progress</h2>
+
+<strong id="overallPercent">
+0%
+</strong>
+
+</div>
+
+<div class="progress bigProgress">
+
+<div
+id="overallFill"
+class="fill"
+></div>
+
+</div>
+
+<br>
+
+<div class="small">
+Completed tasks compared with all your study tasks.
+</div>
+
+</div>
+
+
+<!-- TODAY STATISTICS -->
+
+<div class="card">
+
+<h2>📅 Today's Statistics</h2>
+
+<div class="statGrid">
+
+<div class="stat">
+<div id="todayTotal" class="num">0</div>
+<div class="label">Today's Tasks</div>
+</div>
+
+<div class="stat">
+<div id="todayDone" class="num">0</div>
+<div class="label">Completed</div>
+</div>
+
+<div class="stat">
+<div id="todayLeft" class="num">0</div>
+<div class="label">Remaining</div>
+</div>
+
+<div class="stat">
+<div id="todayPercent" class="num">0%</div>
+<div class="label">Today Progress</div>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- SUBJECT STATISTICS -->
+
+<div class="card">
+
+<h2>📚 Subject Statistics</h2>
+
+<div id="subjectStats"></div>
+
+</div>
+
+
+<!-- PRIORITY STATISTICS -->
+
+<div class="card">
+
+<h2>🎯 Priority Statistics</h2>
+
+<div id="priorityStats"></div>
+
+</div>
+
+
+<!-- STUDY STREAK -->
+
+<div class="card">
+
+<h2>🔥 Study Streak</h2>
+
+<div class="statGrid">
+
+<div class="stat">
+<div class="statIcon">🔥</div>
+<div id="streakDays" class="num">0</div>
+<div class="label">Active Days</div>
+</div>
+
+<div class="stat">
+<div class="statIcon">🏆</div>
+<div id="bestDay" class="num">0</div>
+<div class="label">Best Tasks/Day</div>
+</div>
+
+</div>
+
+<br>
+
+<div class="small">
+Active Days = days on which at least one task was completed.
+</div>
+
+</div>
+
+</div>
+
+
+<!-- ==================================================
+TASK VIEW
+================================================== -->
+
+<div id="todayView" style="display:none">
+
+
+<!-- ADD TASK -->
+
+<div class="card">
+
+<h2>➕ Add Study Task</h2>
+
+<input
+id="taskName"
+placeholder="What do you need to study?"
+>
+
+<br><br>
+
+<div class="grid3">
+
+<select id="subject">
+
+<option value="">Subject</option>
+<option>Mathematics</option>
+<option>Physics</option>
+<option>Chemistry</option>
+<option>Biology</option>
+<option>English</option>
+<option>Bangla</option>
+<option>ICT</option>
+<option>Other</option>
+
+</select>
+
+<select id="priority">
+
+<option>Normal</option>
+<option>High</option>
+<option>Low</option>
+
+</select>
+
+<input
+id="taskTime"
+type="time"
+>
+
+</div>
+
+<br>
+
+<div class="grid2">
+
+<input
+id="taskDate"
+type="date"
+>
+
+<button
+id="addBtn"
+class="primary"
+>
+➕ Add Task
+</button>
+
+</div>
+
+</div>
+
+
+<!-- DATE -->
+
+<div class="card">
+
+<div class="dateNav">
+
+<button
+id="prevDay"
+class="secondary"
+>
+‹
+</button>
+
+<div
+id="dateTitle"
+class="dateTitle"
+></div>
+
+<button
+id="nextDay"
+class="secondary"
+>
+›
+</button>
+
+</div>
+
+<div
+id="days"
+class="days"
+></div>
+
+</div>
+
+
+<!-- DAILY PROGRESS -->
+
+<div class="card">
+
+<div class="header">
+
+<h2>📊 Daily Progress</h2>
+
+<strong id="percent">0%</strong>
+
+</div>
+
+<div class="progress">
+
+<div
+id="progressFill"
+class="fill"
+></div>
+
+</div>
+
+<br>
+
+<div class="grid3">
+
+<div class="stat">
+<div id="total" class="num">0</div>
+<div class="label">Total</div>
+</div>
+
+<div class="stat">
+<div id="done" class="num">0</div>
+<div class="label">Completed</div>
+</div>
+
+<div class="stat">
+<div id="left" class="num">0</div>
+<div class="label">Remaining</div>
+</div>
+
+</div>
+
+</div>
+
+
+<!-- TASK LIST -->
+
+<div class="card">
+
+<div class="header">
+
+<h2>📝 All Tasks</h2>
+
+<button
+id="clearDone"
+class="secondary"
+>
+Clear Done
+</button>
+
+</div>
+
+<div class="searchRow">
+
+<input
+id="search"
+placeholder="🔎 Search task..."
+>
+
+<select id="filterSubject">
+
+<option value="">
+All Subjects
+</option>
+
+<option>Mathematics</option>
+<option>Physics</option>
+<option>Chemistry</option>
+<option>Biology</option>
+<option>English</option>
+<option>Bangla</option>
+<option>ICT</option>
+<option>Other</option>
+
+</select>
+
+<select id="filterPriority">
+
+<option value="">
+All Priority
+</option>
+
+<option>High</option>
+<option>Normal</option>
+<option>Low</option>
+
+</select>
+
+</div>
+
+<br>
+
+<div id="taskList"></div>
+
+</div>
+
+</div>
+
+
+<!-- ==================================================
+WEEK
+================================================== -->
+
+<div
+id="weekView"
+style="display:none"
+>
+
+<div class="card">
+
+<h2>📅 Weekly Progress</h2>
+
+<div id="weekly"></div>
+
+</div>
+
+</div>
+
+
+<!-- ==================================================
+GOALS
+================================================== -->
+
+<div
+id="goalsView"
+style="display:none"
+>
+
+<div class="card">
+
+<h2>🎯 Study Goals</h2>
+
+<input
+id="goalName"
+placeholder="Enter a study goal"
+>
+
+<br><br>
+
+<div class="grid2">
+
+<input
+id="goalTarget"
+type="number"
+min="1"
+placeholder="Target tasks"
+>
+
+<button
+id="goalBtn"
+class="primary"
+>
+Add Goal
+</button>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div id="goalList"></div>
+
+</div>
+
+</div>
+
+
+<!-- ==================================================
+TIMER
+================================================== -->
+
+<div
+id="timerView"
+style="display:none"
+>
+
+<div class="card timer">
+
+<h2>⏱️ Pomodoro Study Timer</h2>
+
+<div
+id="timerDisplay"
+class="timerDisplay"
+>
+25:00
+</div>
+
+<div
+class="actions"
+style="justify-content:center"
+>
+
+<button
+id="startTimer"
+class="primary"
+>
+▶ Start
+</button>
+
+<button
+id="pauseTimer"
+class="secondary"
+>
+⏸ Pause
+</button>
+
+<button
+id="resetTimer"
+class="secondary"
+>
+↻ Reset
+</button>
+
+</div>
+
+<br>
+
+<div class="small">
+25 minutes study session
+</div>
+
+</div>
+
+</div>
+
+
+<!-- DATA -->
+
+<div class="card">
+
+<h3>💾 Data</h3>
+
+<div class="actions">
+
+<button
+id="exportBtn"
+class="secondary"
+>
+⬇ Export Backup
+</button>
+
+<label
+class="secondary"
+style="padding:12px 15px;border-radius:12px;cursor:pointer"
+>
+⬆ Import Backup
+<input
+id="importFile"
+type="file"
+accept=".json"
+style="display:none"
+>
+</label>
+
+<button
+id="resetBtn"
+class="danger"
+>
+Reset All Data
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- EDIT MODAL -->
+
+<div
+id="modal"
+class="modal"
+>
+
+<div class="modalBox">
+
+<h2>✏️ Edit Task</h2>
+
+<input id="editName">
+
+<br><br>
+
+<div class="grid2">
+
+<select id="editSubject">
+<option>Mathematics</option>
+<option>Physics</option>
+<option>Chemistry</option>
+<option>Biology</option>
+<option>English</option>
+<option>Bangla</option>
+<option>ICT</option>
+<option>Other</option>
+</select>
+
+<select id="editPriority">
+<option>Normal</option>
+<option>High</option>
+<option>Low</option>
+</select>
+
+</div>
+
+<br>
+
+<div class="grid2">
+
+<input
+id="editDate"
+type="date"
+>
+
+<input
+id="editTime"
+type="time"
+>
+
+</div>
+
+<br>
+
+<div class="actions">
+
+<button
+id="saveEdit"
+class="primary"
+>
+Save Changes
+</button>
+
+<button
+id="closeModal"
+class="secondary"
+>
+Cancel
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div
+id="toast"
+class="toast"
+></div>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded",function(){
+
+/* =====================================
+DATA
+===================================== */
+
+let tasks=[];
+
+try{
+tasks=JSON.parse(
+localStorage.getItem("SP_TASKS")||"[]"
+);
+
+if(!Array.isArray(tasks)) tasks=[];
+
+}catch(e){
+tasks=[];
+}
+
+
+let goals=[];
+
+try{
+goals=JSON.parse(
+localStorage.getItem("SP_GOALS")||"[]"
+);
+
+if(!Array.isArray(goals)) goals=[];
+
+}catch(e){
+goals=[];
+}
+
+
+function formatDate(d){
+
+return d.getFullYear()+"-"+
+String(d.getMonth()+1).padStart(2,"0")+"-"+
+String(d.getDate()).padStart(2,"0");
+
+}
+
+
+let today=
+formatDate(new Date());
+
+
+tasks=tasks.map(function(t){
+
+if(!t.date){
+t.date=today;
+}
+
+return t;
+
+});
+
+
+let selectedDate=today;
+
+let editingId=null;
+
+
+/* =====================================
+SAVE
+===================================== */
+
+function save(){
+
+localStorage.setItem(
+"SP_TASKS",
+JSON.stringify(tasks)
+);
+
+localStorage.setItem(
+"SP_GOALS",
+JSON.stringify(goals)
+);
+
+}
+
+
+/* =====================================
+TOAST
+===================================== */
+
+function notify(msg){
+
+let t=
+document.getElementById("toast");
+
+t.textContent=msg;
+
+t.style.display="block";
+
+setTimeout(function(){
+t.style.display="none";
+},1800);
+
+}
+
+
+/* =====================================
+NAVIGATION
+===================================== */
+
+document
+.querySelectorAll(".tab")
+.forEach(function(tab){
+
+tab.addEventListener("click",function(){
+
+document
+.querySelectorAll(".tab")
+.forEach(function(x){
+x.classList.remove("active");
+});
+
+tab.classList.add("active");
+
+let view=
+tab.dataset.view;
+
+document.getElementById("dashboardView")
+.style.display=
+view==="dashboard"?"block":"none";
+
+document.getElementById("todayView")
+.style.display=
+view==="today"?"block":"none";
+
+document.getElementById("weekView")
+.style.display=
+view==="week"?"block":"none";
+
+document.getElementById("goalsView")
+.style.display=
+view==="goals"?"block":"none";
+
+document.getElementById("timerView")
+.style.display=
+view==="timer"?"block":"none";
+
+
+if(view==="dashboard")
+renderDashboard();
+
+if(view==="week")
+renderWeek();
+
+if(view==="goals")
+renderGoals();
+
+});
+
+});
+
+
+/* =====================================
+ADD TASK
+===================================== */
+
+document
+.getElementById("addBtn")
+.addEventListener("click",function(){
+
+let name=
+document.getElementById("taskName")
+.value.trim();
+
+if(!name){
+
+notify("Please enter a task.");
+
+return;
+
+}
+
+
+let date=
+document.getElementById("taskDate").value||
+today;
+
+
+let newTask={
+
+id:Date.now()+Math.random(),
+
+name:name,
+
+subject:
+document.getElementById("subject").value||
+"Other",
+
+priority:
+document.getElementById("priority").value,
+
+date:date,
+
+time:
+document.getElementById("taskTime").value||"",
+
+completed:false
+
+};
+
+
+/* NEVER REPLACE OLD TASK */
+
+tasks.push(newTask);
+
+save();
+
+selectedDate=date;
+
+
+/* Reset filters */
+
+document.getElementById("search").value="";
+
+document.getElementById("filterSubject").value="";
+
+document.getElementById("filterPriority").value="";
+
+
+/* Reset inputs */
+
+document.getElementById("taskName").value="";
+
+document.getElementById("subject").value="";
+
+document.getElementById("priority").value="Normal";
+
+document.getElementById("taskTime").value="";
+
+
+renderTasks();
+
+renderProgress();
+
+renderCalendar();
+
+renderDashboard();
+
+notify("✅ Task added!");
+
+});
+
+
+/* =====================================
+TASK CALENDAR
+===================================== */
+
+function renderCalendar(){
+
+let d=
+new Date(
+selectedDate+"T00:00:00"
+);
+
+
+let months=[
+"January","February","March","April",
+"May","June","July","August",
+"September","October","November","December"
+];
+
+
+document.getElementById("dateTitle")
+.textContent=
+months[d.getMonth()]+" "+
+d.getDate()+", "+
+d.getFullYear();
+
+
+let start=new Date(d);
+
+start.setDate(
+d.getDate()-d.getDay()
+);
+
+
+let names=[
+"Sun","Mon","Tue","Wed",
+"Thu","Fri","Sat"
+];
+
+
+let box=
+document.getElementById("days");
+
+box.innerHTML="";
+
+
+for(let i=0;i<7;i++){
+
+let x=new Date(start);
+
+x.setDate(start.getDate()+i);
+
+let date=formatDate(x);
+
+let el=document.createElement("div");
+
+el.className=
+"day"+
+(date===selectedDate?" active":"");
+
+el.innerHTML=
+"<small>"+
+names[i]+
+"</small>"+
+x.getDate();
+
+
+el.onclick=function(){
+
+selectedDate=date;
+
+document.getElementById("taskDate")
+.value=date;
+
+document.getElementById("search")
+.value="";
+
+document.getElementById("filterSubject")
+.value="";
+
+document.getElementById("filterPriority")
+.value="";
+
+render();
+
+};
+
+box.appendChild(el);
+
+}
+
+}
+
+
+/* =====================================
+TASK LIST
+===================================== */
+
+function renderTasks(){
+
+let list=
+document.getElementById("taskList");
+
+list.innerHTML="";
+
+
+let search=
+document.getElementById("search")
+.value.toLowerCase();
+
+let subject=
+document.getElementById("filterSubject")
+.value;
+
+let priority=
+document.getElementById("filterPriority")
+.value;
+
+
+/* GET ALL TASKS FOR SELECTED DATE */
+
+let filtered=
+tasks.filter(function(t){
+
+return t.date===selectedDate;
+
+});
+
+
+if(search){
+
+filtered=
+filtered.filter(function(t){
+
+return t.name
+.toLowerCase()
+.includes(search);
+
+});
+
+}
+
+
+if(subject){
+
+filtered=
+filtered.filter(function(t){
+
+return t.subject===subject;
+
+});
+
+}
+
+
+if(priority){
+
+filtered=
+filtered.filter(function(t){
+
+return t.priority===priority;
+
+});
+
+}
+
+
+filtered.sort(function(a,b){
+
+return (a.time||"")
+.localeCompare(b.time||"");
+
+});
+
+
+if(!filtered.length){
+
+list.innerHTML=
+"<div class='empty'>"+
+"📖<br><br>No tasks yet"+
+"</div>";
+
+return;
+
+}
+
+
+filtered.forEach(function(task){
+
+let div=
+document.createElement("div");
+
+div.className=
+"task"+
+(task.completed?" completed":"");
+
+
+let pc=
+task.priority==="High"
+?"high":
+task.priority==="Low"
+?"low":
+"normal";
+
+
+div.innerHTML=
+
+"<input class='check' type='checkbox' "+
+(task.completed?"checked":"")+">"+
+
+"<div class='taskInfo'>"+
+"<div class='taskName'></div>"+
+"<div class='taskMeta'></div>"+
+"<span class='badge "+pc+"'>"+
+task.priority+
+"</span>"+
+"</div>"+
+
+"<button class='secondary editBtn'>✏️</button>"+
+
+"<button class='danger deleteBtn'>🗑</button>";
+
+
+div.querySelector(".taskName")
+.textContent=task.name;
+
+
+div.querySelector(".taskMeta")
+.textContent=
+task.subject+
+(task.time?" • "+task.time:"");
+
+
+div.querySelector(".check")
+.onchange=function(){
+
+task.completed=this.checked;
+
+save();
+
+render();
+
+};
+
+
+div.querySelector(".deleteBtn")
+.onclick=function(){
+
+tasks=
+tasks.filter(function(t){
+return t.id!==task.id;
+});
+
+save();
+
+render();
+
+notify("Task deleted");
+
+};
+
+
+div.querySelector(".editBtn")
+.onclick=function(){
+
+openEdit(task);
+
+};
+
+
+list.appendChild(div);
+
+});
+
+}
+
+
+/* =====================================
+DAILY PROGRESS
+===================================== */
+
+function renderProgress(){
+
+let arr=
+tasks.filter(function(t){
+
+return t.date===selectedDate;
+
+});
+
+
+let total=arr.length;
+
+let done=
+arr.filter(function(t){
+return t.completed;
+}).length;
+
+let left=total-done;
+
+let p=
+total?
+Math.round(done/total*100):
+0;
+
+
+document.getElementById("total")
+.textContent=total;
+
+document.getElementById("done")
+.textContent=done;
+
+document.getElementById("left")
+.textContent=left;
+
+document.getElementById("percent")
+.textContent=p+"%";
+
+document.getElementById("progressFill")
+.style.width=p+"%";
+
+}
+
+
+/* =====================================
+MAIN DASHBOARD STATISTICS
+===================================== */
+
+function renderDashboard(){
+
+/* ALL TASKS */
+
+let total=tasks.length;
+
+let done=
+tasks.filter(function(t){
+return t.completed;
+}).length;
+
+let remaining=total-done;
+
+let percent=
+total?
+Math.round(done/total*100):
+0;
+
+
+/* MAIN STATS */
+
+document.getElementById("allTotal")
+.textContent=total;
+
+document.getElementById("allDone")
+.textContent=done;
+
+document.getElementById("allRemaining")
+.textContent=remaining;
+
+document.getElementById("allPercent")
+.textContent=percent+"%";
+
+document.getElementById("overallPercent")
+.textContent=percent+"%";
+
+document.getElementById("overallFill")
+.style.width=percent+"%";
+
+
+/* TODAY */
+
+let todayTasks=
+tasks.filter(function(t){
+return t.date===today;
+});
+
+let todayTotal=todayTasks.length;
+
+let todayDone=
+todayTasks.filter(function(t){
+return t.completed;
+}).length;
+
+let todayLeft=
+todayTotal-todayDone;
+
+let todayPercent=
+todayTotal?
+Math.round(todayDone/todayTotal*100):
+0;
+
+
+document.getElementById("todayTotal")
+.textContent=todayTotal;
+
+document.getElementById("todayDone")
+.textContent=todayDone;
+
+document.getElementById("todayLeft")
+.textContent=todayLeft;
+
+document.getElementById("todayPercent")
+.textContent=todayPercent+"%";
+
+
+/* SUBJECT STATS */
+
+renderSubjectStats();
+
+
+/* PRIORITY STATS */
+
+renderPriorityStats();
+
+
+/* STREAK */
+
+renderStreak();
+
+}
+
+
+/* =====================================
+SUBJECT STATISTICS
+===================================== */
+
+function renderSubjectStats(){
+
+let box=
+document.getElementById("subjectStats");
+
+box.innerHTML="";
+
+
+let data={};
+
+
+tasks.forEach(function(t){
+
+let s=t.subject||"Other";
+
+if(!data[s]){
+
+data[s]={
+total:0,
+done:0
+};
+
+}
+
+data[s].total++;
+
+if(t.completed){
+data[s].done++;
+}
+
+});
+
+
+let subjects=
+Object.keys(data);
+
+
+if(!subjects.length){
+
+box.innerHTML=
+"<div class='empty'>"+
+"📚 No subject data yet"+
+"</div>";
+
+return;
+
+}
+
+
+subjects.sort();
+
+
+subjects.forEach(function(subject){
+
+let total=data[subject].total;
+
+let done=data[subject].done;
+
+let p=
+total?
+Math.round(done/total*100):
+0;
+
+
+let row=
+document.createElement("div");
+
+row.className="statRow";
+
+
+row.innerHTML=
+
+"<div class='statRowTop'>"+
+"<strong></strong>"+
+"<span>"+
+done+
+"/"+
+total+
+" ("+
+p+
+"%)"+
+"</span>"+
+"</div>"+
+
+"<div class='progress'>"+
+"<div class='fill' style='width:"+
+p+
+"%'></div>"+
+"</div>";
+
+
+row.querySelector("strong")
+.textContent=subject;
+
+
+box.appendChild(row);
+
+});
+
+}
+
+
+/* =====================================
+PRIORITY STATISTICS
+===================================== */
+
+function renderPriorityStats(){
+
+let box=
+document.getElementById("priorityStats");
+
+box.innerHTML="";
+
+
+let priorities=[
+"High",
+"Normal",
+"Low"
+];
+
+
+priorities.forEach(function(priority){
+
+let arr=
+tasks.filter(function(t){
+
+return t.priority===priority;
+
+});
+
+
+let total=arr.length;
+
+let done=
+arr.filter(function(t){
+
+return t.completed;
+
+}).length;
+
+
+let p=
+total?
+Math.round(done/total*100):
+0;
+
+
+let row=
+document.createElement("div");
+
+row.className="statRow";
+
+
+row.innerHTML=
+
+"<div class='statRowTop'>"+
+"<strong></strong>"+
+"<span>"+
+done+
+"/"+
+total+
+" completed"+
+"</span>"+
+"</div>"+
+
+"<div class='progress'>"+
+"<div class='fill' style='width:"+
+p+
+"%'></div>"+
+"</div>";
+
+
+row.querySelector("strong")
+.textContent=priority+" Priority";
+
+
+box.appendChild(row);
+
+});
+
+}
+
+
+/* =====================================
+STUDY STREAK
+===================================== */
+
+function renderStreak(){
+
+let completedDates={};
+
+
+tasks.forEach(function(t){
+
+if(t.completed){
+
+completedDates[t.date]=true;
+
+}
+
+});
+
+
+let activeDays=
+Object.keys(completedDates).length;
+
+
+let dailyCount={};
+
+
+tasks.forEach(function(t){
+
+if(t.completed){
+
+if(!dailyCount[t.date]){
+dailyCount[t.date]=0;
+}
+
+dailyCount[t.date]++;
+
+}
+
+});
+
+
+let best=0;
+
+Object.keys(dailyCount)
+.forEach(function(date){
+
+if(dailyCount[date]>best){
+best=dailyCount[date];
+}
+
+});
+
+
+document.getElementById("streakDays")
+.textContent=activeDays;
+
+document.getElementById("bestDay")
+.textContent=best;
+
+}
+
+
+/* =====================================
+WEEK
+===================================== */
+
+function renderWeek(){
+
+let box=
+document.getElementById("weekly");
+
+box.innerHTML="";
+
+
+let base=
+new Date(
+selectedDate+
+"T00:00:00"
+);
+
+base.setDate(
+base.getDate()-base.getDay()
+);
+
+
+let names=[
+"Sunday","Monday","Tuesday",
+"Wednesday","Thursday",
+"Friday","Saturday"
+];
+
+
+for(let i=0;i<7;i++){
+
+let d=new Date(base);
+
+d.setDate(base.getDate()+i);
+
+let date=formatDate(d);
+
+let arr=
+tasks.filter(function(t){
+return t.date===date;
+});
+
+let done=
+arr.filter(function(t){
+return t.completed;
+}).length;
+
+let p=
+arr.length?
+Math.round(done/arr.length*100):
+0;
+
+
+let row=
+document.createElement("div");
+
+row.className="goal";
+
+row.innerHTML=
+"<div class='goalTop'>"+
+"<strong>"+
+names[i]+
+"</strong>"+
+"<span>"+
+done+
+"/"+
+arr.length+
+" • "+
+p+
+"%"+
+"</span>"+
+"</div><br>"+
+"<div class='progress'>"+
+"<div class='fill' style='width:"+
+p+
+"%'></div>"+
+"</div>";
+
+box.appendChild(row);
+
+}
+
+}
+
+
+/* =====================================
+GOALS
+===================================== */
+
+document
+.getElementById("goalBtn")
+.onclick=function(){
+
+let name=
+document.getElementById("goalName")
+.value.trim();
+
+let target=
+parseInt(
+document.getElementById("goalTarget")
+.value
+);
+
+
+if(!name||!target){
+
+notify("Enter goal and target.");
+
+return;
+
+}
+
+
+goals.push({
+id:Date.now(),
+name:name,
+target:target,
+done:0
+});
+
+save();
+
+document.getElementById("goalName")
+.value="";
+
+document.getElementById("goalTarget")
+.value="";
+
+renderGoals();
+
+notify("Goal added!");
+
+};
+
+
+function renderGoals(){
+
+let box=
+document.getElementById("goalList");
+
+box.innerHTML="";
+
+
+if(!goals.length){
+
+box.innerHTML=
+"<div class='empty'>"+
+"🎯<br><br>No goals yet"+
+"</div>";
+
+return;
+
+}
+
+
+goals.forEach(function(goal){
+
+let p=
+Math.min(
+100,
+Math.round(
+goal.done/goal.target*100
+)
+);
+
+
+let div=
+document.createElement("div");
+
+div.className="goal";
+
+div.innerHTML=
+
+"<div class='goalTop'>"+
+"<strong></strong>"+
+"<span>"+
+goal.done+
+"/"+
+goal.target+
+"</span>"+
+"</div><br>"+
+
+"<div class='progress'>"+
+"<div class='fill' style='width:"+
+p+
+"%'></div>"+
+"</div><br>"+
+
+"<button class='primary plus'>"+
+"+1 Complete"+
+"</button> "+
+
+"<button class='danger remove'>"+
+"Delete"+
+"</button>";
+
+
+div.querySelector("strong")
+.textContent=goal.name;
+
+
+div.querySelector(".plus")
+.onclick=function(){
+
+if(goal.done<goal.target){
+goal.done++;
+}
+
+save();
+
+renderGoals();
+
+};
+
+
+div.querySelector(".remove")
+.onclick=function(){
+
+goals=
+goals.filter(function(g){
+return g.id!==goal.id;
+});
+
+save();
+
+renderGoals();
+
+};
+
+
+box.appendChild(div);
+
+});
+
+}
+
+
+/* =====================================
+EDIT TASK
+===================================== */
+
+function openEdit(task){
+
+editingId=task.id;
+
+document.getElementById("editName")
+.value=task.name;
+
+document.getElementById("editSubject")
+.value=task.subject;
+
+document.getElementById("editPriority")
+.value=task.priority;
+
+document.getElementById("editDate")
+.value=task.date;
+
+document.getElementById("editTime")
+.value=task.time;
+
+document.getElementById("modal")
+.style.display="flex";
+
+}
+
+
+document
+.getElementById("closeModal")
+.onclick=function(){
+
+document.getElementById("modal")
+.style.display="none";
+
+};
+
+
+document
+.getElementById("saveEdit")
+.onclick=function(){
+
+let task=
+tasks.find(function(t){
+return t.id===editingId;
+});
+
+
+if(!task)return;
+
+
+task.name=
+document.getElementById("editName")
+.value.trim();
+
+task.subject=
+document.getElementById("editSubject")
+.value;
+
+task.priority=
+document.getElementById("editPriority")
+.value;
+
+task.date=
+document.getElementById("editDate")
+.value;
+
+task.time=
+document.getElementById("editTime")
+.value;
+
+
+selectedDate=task.date;
+
+save();
+
+document.getElementById("modal")
+.style.display="none";
+
+
+document.getElementById("search")
+.value="";
+
+document.getElementById("filterSubject")
+.value="";
+
+document.getElementById("filterPriority")
+.value="";
+
+
+render();
+
+notify("Task updated!");
+
+};
+
+
+/* =====================================
+FILTERS
+===================================== */
+
+document
+.getElementById("search")
+.oninput=renderTasks;
+
+document
+.getElementById("filterSubject")
+.onchange=renderTasks;
+
+document
+.getElementById("filterPriority")
+.onchange=renderTasks;
+
+
+/* =====================================
+CLEAR COMPLETED
+===================================== */
+
+document
+.getElementById("clearDone")
+.onclick=function(){
+
+tasks=
+tasks.filter(function(t){
+
+return !(
+t.date===selectedDate &&
+t.completed
+);
+
+});
+
+save();
+
+render();
+
+notify("Completed tasks cleared");
+
+};
+
+
+/* =====================================
+DATE NAVIGATION
+===================================== */
+
+document
+.getElementById("prevDay")
+.onclick=function(){
+
+let d=
+new Date(
+selectedDate+
+"T00:00:00"
+);
+
+d.setDate(
+d.getDate()-1
+);
+
+selectedDate=formatDate(d);
+
+document.getElementById("taskDate")
+.value=selectedDate;
+
+resetFilters();
+
+render();
+
+};
+
+
+document
+.getElementById("nextDay")
+.onclick=function(){
+
+let d=
+new Date(
+selectedDate+
+"T00:00:00"
+);
+
+d.setDate(
+d.getDate()+1
+);
+
+selectedDate=formatDate(d);
+
+document.getElementById("taskDate")
+.value=selectedDate;
+
+resetFilters();
+
+render();
+
+};
+
+
+function resetFilters(){
+
+document.getElementById("search")
+.value="";
+
+document.getElementById("filterSubject")
+.value="";
+
+document.getElementById("filterPriority")
+.value="";
+
+}
+
+
+/* =====================================
+TIMER
+===================================== */
+
+let seconds=1500;
+
+let timerInterval=null;
+
+
+function updateTimer(){
+
+let m=
+Math.floor(seconds/60);
+
+let s=
+seconds%60;
+
+document.getElementById("timerDisplay")
+.textContent=
+String(m).padStart(2,"0")+
+":"+
+String(s).padStart(2,"0");
+
+}
+
+
+document
+.getElementById("startTimer")
+.onclick=function(){
+
+if(timerInterval)return;
+
+timerInterval=
+setInterval(function(){
+
+if(seconds>0){
+
+seconds--;
+
+updateTimer();
+
+}else{
+
+clearInterval(timerInterval);
+
+timerInterval=null;
+
+notify("🎉 Study session complete!");
+
+}
+
+},1000);
+
+};
+
+
+document
+.getElementById("pauseTimer")
+.onclick=function(){
+
+clearInterval(timerInterval);
+
+timerInterval=null;
+
+};
+
+
+document
+.getElementById("resetTimer")
+.onclick=function(){
+
+clearInterval(timerInterval);
+
+timerInterval=null;
+
+seconds=1500;
+
+updateTimer();
+
+};
+
+
+/* =====================================
+DARK MODE
+===================================== */
+
+document
+.getElementById("themeBtn")
+.onclick=function(){
+
+document.body
+.classList.toggle("dark");
+
+let dark=
+document.body.classList.contains("dark");
+
+this.textContent=
+dark?"☀️":"🌙";
+
+localStorage.setItem(
+"SP_DARK",
+dark
+);
+
+};
+
+
+if(
+localStorage.getItem("SP_DARK")==="true"
+){
+
+document.body.classList.add("dark");
+
+document.getElementById("themeBtn")
+.textContent="☀️";
+
+}
+
+
+/* =====================================
+EXPORT
+===================================== */
+
+document
+.getElementById("exportBtn")
+.onclick=function(){
+
+let data={
+tasks:tasks,
+goals:goals
+};
+
+
+let blob=
+new Blob(
+[JSON.stringify(data,null,2)],
+{type:"application/json"}
+);
+
+
+let url=
+URL.createObjectURL(blob);
+
+let a=
+document.createElement("a");
+
+a.href=url;
+
+a.download=
+"study-planner-backup.json";
+
+a.click();
+
+URL.revokeObjectURL(url);
+
+notify("Backup downloaded!");
+
+};
+
+
+/* =====================================
+IMPORT
+===================================== */
+
+document
+.getElementById("importFile")
+.onchange=function(){
+
+let file=this.files[0];
+
+if(!file)return;
+
+
+let reader=
+new FileReader();
+
+
+reader.onload=function(e){
+
+try{
+
+let data=
+JSON.parse(e.target.result);
+
+
+if(Array.isArray(data.tasks)){
+tasks=data.tasks;
+}
+
+if(Array.isArray(data.goals)){
+goals=data.goals;
+}
+
+save();
+
+render();
+
+renderDashboard();
+
+renderGoals();
+
+notify("Backup restored!");
+
+}catch(err){
+
+notify("Invalid backup file.");
+
+}
+
+};
+
+
+reader.readAsText(file);
+
+};
+
+
+/* =====================================
+RESET
+===================================== */
+
+document
+.getElementById("resetBtn")
+.onclick=function(){
+
+if(
+confirm(
+"Delete ALL study data?"
+)
+){
+
+tasks=[];
+
+goals=[];
+
+save();
+
+render();
+
+renderDashboard();
+
+renderGoals();
+
+notify("All data reset.");
+
+}
+
+};
+
+
+/* =====================================
+ENTER TO ADD
+===================================== */
+
+document
+.getElementById("taskName")
+.addEventListener(
+"keydown",
+function(e){
+
+if(e.key==="Enter"){
+
+document.getElementById("addBtn")
+.click();
+
+}
+
+});
+
+
+/* =====================================
+MAIN RENDER
+===================================== */
+
+function render(){
+
+renderCalendar();
+
+renderTasks();
+
+renderProgress();
+
+renderDashboard();
+
+}
+
+
+document.getElementById("taskDate")
+.value=today;
+
+render();
+
+renderGoals();
+
+updateTimer();
+
+});
+</script>
+
+
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register("./sw.js")
+      .then(function () {
+        console.log("Study Planner PWA ready");
+      })
+      .catch(function (error) {
+        console.error("Service Worker registration failed:", error);
+      });
+  });
+}
+</script>
+
+</body>
+</html>
